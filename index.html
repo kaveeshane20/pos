@@ -3,205 +3,191 @@
 <head>
   <meta charset="UTF-8" />
   <meta name="viewport" content="width=device-width, initial-scale=1" />
-  <title>Bakery POS with Beautiful Invoice</title>
+  <title>Bakery POS</title>
   <style>
     body {
       font-family: 'Segoe UI', Tahoma, Geneva, Verdana, sans-serif;
       background: #fff7e6;
       padding: 20px;
-      max-width: 700px;
+      max-width: 800px;
       margin: auto;
       color: #4a4a4a;
     }
     h1 {
       text-align: center;
       color: #b35d1d;
-      margin-bottom: 25px;
     }
     table {
       width: 100%;
       border-collapse: collapse;
-      margin-bottom: 20px;
-      box-shadow: 0 2px 8px rgb(179 93 29 / 0.25);
+      margin: 20px 0;
       background: #fff;
+      box-shadow: 0 2px 8px rgba(0,0,0,0.1);
       border-radius: 8px;
-      overflow: hidden;
     }
     th, td {
-      padding: 12px 15px;
+      padding: 10px;
       text-align: center;
     }
     thead {
       background-color: #b35d1d;
       color: white;
-      font-weight: 600;
-      font-size: 14px;
     }
     tbody tr:nth-child(even) {
-      background-color: #f9f4ec;
+      background: #f9f4ec;
     }
-    tbody tr:hover {
-      background-color: #fde6c9;
-    }
-    input[type="number"] {
-      width: 70px;
-      padding: 7px;
-      border-radius: 5px;
-      border: 1px solid #ccc;
+    input {
+      padding: 5px;
       text-align: center;
-      font-size: 14px;
-    }
-    input[type="number"]:focus {
-      border-color: #b35d1d;
-      outline: none;
-    }
-    label {
-      font-weight: 600;
-      display: block;
-      margin-top: 15px;
-      font-size: 15px;
-      color: #5a5a5a;
-    }
-    input#discount {
-      width: 100px;
-      font-size: 14px;
-      padding: 7px;
-      border-radius: 5px;
-      border: 1px solid #ccc;
-      margin-top: 5px;
-    }
-    input#discount:focus {
-      border-color: #b35d1d;
-      outline: none;
     }
     button {
       background: #b35d1d;
       color: white;
-      padding: 15px;
+      padding: 10px 20px;
       border: none;
-      border-radius: 8px;
+      margin-top: 15px;
+      border-radius: 5px;
       cursor: pointer;
-      font-weight: 700;
-      font-size: 16px;
-      width: 100%;
-      margin-top: 25px;
-      box-shadow: 0 4px 8px rgb(179 93 29 / 0.4);
-      transition: background-color 0.3s ease;
+      font-weight: bold;
     }
     button:hover {
       background: #8b4313;
-      box-shadow: 0 6px 12px rgb(139 67 19 / 0.5);
     }
     #result {
-      margin-top: 30px;
-      border: 1px solid #ddd;
-      padding: 20px;
-      border-radius: 12px;
-      background: #fff;
-      box-shadow: 0 4px 12px rgb(179 93 29 / 0.15);
-      color: #3b3b3b;
-      font-family: 'Courier New', Courier, monospace;
       white-space: pre-wrap;
-      line-height: 1.5;
-      font-size: 14px;
+      background: #fff;
+      padding: 15px;
+      border-radius: 10px;
+      margin-top: 30px;
+      box-shadow: 0 4px 12px rgba(0,0,0,0.1);
+      font-family: monospace;
     }
   </style>
 </head>
 <body>
 
-  <h1>New Station viwe Hotel & Bakery POS System</h1>
+<h1>New Station viwe Hotel & Bakery</h1>
 
-  <form id="posForm">
-    <table>
-      <thead>
-        <tr>
-          <th>Item</th>
-          <th>Price (Rs.)</th>
-          <th>Quantity</th>
-        </tr>
-      </thead>
-      <tbody>
-        <tr>
-          <td>Bread</td>
-          <td>120</td>
-          <td><input type="number" min="0" value="0" id="breadQty" /></td>
-        </tr>
-        <tr>
-          <td>Cake</td>
-          <td> 1KG 1500</td>
-          <td><input type="number" min="0" value="0" id="cakeQty" /></td>
-        </tr>
-        <tr>
-          <td>Fish Bun</td>
-          <td>60</td>
-          <td><input type="number" min="0" value="0" id="fishBunQty" /></td>
-        </tr>
-      </tbody>
-    </table>
+<form id="posForm">
+  <table id="itemsTable">
+    <thead>
+      <tr>
+        <th>Item</th>
+        <th>Price (Rs.)</th>
+        <th>Quantity</th>
+        <th>Remove</th>
+      </tr>
+    </thead>
+    <tbody id="itemBody">
+      <!-- Items go here -->
+    </tbody>
+  </table>
 
-    <label for="discount">Discount (Rs.)</label>
-    <input type="number" min="0" value="0" id="discount" />
+  <button type="button" onclick="addItem()">+ Add Item</button><br><br>
 
-    <button type="submit">Calculate & Generate Invoice</button>
-  </form>
+  <label>Discount (Rs.): <input type="number" id="discount" value="0" min="0" /></label><br><br>
 
-  <pre id="result"></pre>
+  <button type="submit">Generate Invoice</button>
+</form>
 
-  <script src="https://cdnjs.cloudflare.com/ajax/libs/jspdf/2.5.1/jspdf.umd.min.js"></script>
-  <script>
-    const prices = {
-      bread: 120,
-      cake: 1500,
-      fishbun: 60
-    };
+<pre id="result"></pre>
 
-    const { jsPDF } = window.jspdf;
+<!-- Navigation Buttons -->
+<button onclick="window.open('history.html', '_blank')">📄 Invoice History</button>
+<button onclick="window.open('profit.html', '_blank')">📊 Daily Profit</button>
 
-    function formatLine(item, qty, price, total) {
-      const padRight = (text, len) => text.toString().padEnd(len, ' ');
-      const padLeft = (text, len) => text.toString().padStart(len, ' ');
-      return padRight(item, 12) + padLeft(qty, 5) + padLeft(price, 9) + padLeft(total, 10);
-    }
+<script src="https://cdnjs.cloudflare.com/ajax/libs/jspdf/2.5.1/jspdf.umd.min.js"></script>
+<script>
+  const { jsPDF } = window.jspdf;
+  let itemId = 0;
 
-    document.getElementById("posForm").addEventListener("submit", function(e) {
-      e.preventDefault();
+  function addItem(name = "", price = "", qty = "") {
+    const tbody = document.getElementById("itemBody");
+    const row = document.createElement("tr");
+    row.setAttribute("data-id", itemId);
+    row.innerHTML = `
+      <td><input type="text" value="${name}" placeholder="Item name" /></td>
+      <td><input type="number" value="${price}" min="0" placeholder="Price" /></td>
+      <td><input type="number" value="${qty}" min="0" placeholder="Qty" /></td>
+      <td><button type="button" onclick="removeItem(${itemId})">X</button></td>
+    `;
+    tbody.appendChild(row);
+    itemId++;
+  }
 
-      const breadQty = parseInt(document.getElementById("breadQty").value) || 0;
-      const cakeQty = parseInt(document.getElementById("cakeQty").value) || 0;
-      const fishBunQty = parseInt(document.getElementById("fishBunQty").value) || 0;
-      const discount = parseFloat(document.getElementById("discount").value) || 0;
+  function removeItem(id) {
+    const row = document.querySelector(`tr[data-id='${id}']`);
+    if (row) row.remove();
+  }
 
-      const billValue = (breadQty * prices.bread) + (cakeQty * prices.cake) + (fishBunQty * prices.fishbun);
-      const finalBill = Math.max(0, billValue - discount);
+  function formatLine(item, qty, price, total) {
+    const padRight = (txt, len) => txt.toString().padEnd(len, ' ');
+    const padLeft = (txt, len) => txt.toString().padStart(len, ' ');
+    return padRight(item, 12) + padLeft(qty, 5) + padLeft(price, 9) + padLeft(total, 10);
+  }
 
-      let invoiceText = "====== New Station viwe Hotel & Bakery Invoice ======\n\n";
-      invoiceText += formatLine("Item", "Qty", "Price", "Total") + "\n";
-      invoiceText += "---------------------------------------\n";
+  function saveInvoiceToHistory(invoiceObj) {
+    let history = JSON.parse(localStorage.getItem("invoiceHistory")) || [];
+    history.push(invoiceObj);
+    localStorage.setItem("invoiceHistory", JSON.stringify(history));
+  }
 
-      if (breadQty > 0) invoiceText += formatLine("Bread", breadQty, prices.bread, breadQty * prices.bread) + "\n";
-      if (cakeQty > 0) invoiceText += formatLine("Cake", cakeQty, prices.cake, cakeQty * prices.cake) + "\n";
-      if (fishBunQty > 0) invoiceText += formatLine("Fish Bun", fishBunQty, prices.fishbun, fishBunQty * prices.fishbun) + "\n";
+  document.getElementById("posForm").addEventListener("submit", function (e) {
+    e.preventDefault();
 
-      invoiceText += "---------------------------------------\n";
-      invoiceText += formatLine("Subtotal:", "", "", billValue.toFixed(2)) + "\n";
-      invoiceText += formatLine("Discount:", "", "", discount.toFixed(2)) + "\n";
-      invoiceText += "---------------------------------------\n";
-      invoiceText += formatLine("Total to Pay:", "", "", finalBill.toFixed(2)) + "\n\n";
-      invoiceText += "Thank you for join with us!";
+    const discount = parseFloat(document.getElementById("discount").value) || 0;
+    const rows = document.querySelectorAll("#itemBody tr");
 
-      document.getElementById("result").textContent = invoiceText;
+    let invoiceText = "======== New Station viwe Hotel & Bakery ========\n\n";
+    invoiceText += formatLine("Item", "Qty", "Price", "Total") + "\n";
+    invoiceText += "---------------------------------------------\n";
 
-      // Generate PDF
-      const doc = new jsPDF();
-      doc.setFont("courier", "normal");
-      doc.setFontSize(18);
-      doc.text(" New Station viwe Hotel & Bakery Invoice", 20, 20);
-      doc.setFontSize(12);
-      const splitText = doc.splitTextToSize(invoiceText, 170);
-      doc.text(splitText, 20, 30);
-      doc.save("sdk_bakery_invoice.pdf");
+    let subtotal = 0;
+
+    rows.forEach(row => {
+      const inputs = row.querySelectorAll("input");
+      const name = inputs[0].value.trim();
+      const price = parseFloat(inputs[1].value);
+      const qty = parseInt(inputs[2].value);
+
+      if (name && price > 0 && qty > 0) {
+        const total = price * qty;
+        subtotal += total;
+        invoiceText += formatLine(name, qty, price, total.toFixed(2)) + "\n";
+      }
     });
-  </script>
 
+    const finalTotal = Math.max(0, subtotal - discount);
+
+    invoiceText += "---------------------------------------------\n";
+    invoiceText += formatLine("Subtotal:", "", "", subtotal.toFixed(2)) + "\n";
+    invoiceText += formatLine("Discount:", "", "", discount.toFixed(2)) + "\n";
+    invoiceText += "---------------------------------------------\n";
+    invoiceText += formatLine("Total to Pay:", "", "", finalTotal.toFixed(2)) + "\n\n";
+    invoiceText += "     Thank you for shopping with us!";
+
+    document.getElementById("result").textContent = invoiceText;
+
+    // Save invoice
+    saveInvoiceToHistory({
+      date: new Date().toISOString(),
+      total: finalTotal
+    });
+
+    // PDF
+    const doc = new jsPDF();
+    doc.setFont("courier", "normal");
+    doc.setFontSize(16);
+    doc.text("New Station viwe Hotel & Bakery", 20, 20);
+    doc.setFontSize(12);
+    const split = doc.splitTextToSize(invoiceText, 180);
+    doc.text(split, 20, 30);
+    doc.save("invoice.pdf");
+  });
+
+  addItem("Bread", 120, 0);
+  addItem("Cake", 1500, 0);
+  addItem("Fish Bun", 60, 0);
+</script>
 </body>
 </html>
