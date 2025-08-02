@@ -1,0 +1,43 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8" />
+  <title>Daily Profit</title>
+  <style>
+    body {
+      font-family: monospace;
+      background: #f8f8f8;
+      padding: 20px;
+    }
+    h2 {
+      color: #b35d1d;
+    }
+    pre {
+      background: #fff;
+      padding: 20px;
+      border-radius: 10px;
+      box-shadow: 0 2px 8px rgba(0,0,0,0.1);
+      font-size: 18px;
+    }
+  </style>
+</head>
+<body>
+  <h2>📊 Daily Profit</h2>
+  <pre id="profitDisplay">Calculating...</pre>
+
+  <script>
+    const today = new Date().toISOString().slice(0, 10);
+    const history = JSON.parse(localStorage.getItem("invoiceHistory")) || [];
+    let total = 0;
+
+    history.forEach(inv => {
+      if (inv.date.startsWith(today)) {
+        total += inv.total;
+      }
+    });
+
+    document.getElementById("profitDisplay").textContent =
+      total > 0 ? `Rs. ${total.toFixed(2)}` : "No sales yet today.";
+  </script>
+</body>
+</html>

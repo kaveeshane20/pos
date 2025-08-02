@@ -1,0 +1,42 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8" />
+  <title>Invoice History</title>
+  <style>
+    body {
+      font-family: monospace;
+      background: #f8f8f8;
+      padding: 20px;
+    }
+    h2 {
+      color: #b35d1d;
+    }
+    pre {
+      background: #fff;
+      padding: 20px;
+      border-radius: 10px;
+      box-shadow: 0 2px 8px rgba(0,0,0,0.1);
+    }
+  </style>
+</head>
+<body>
+  <h2>📄 Invoice History</h2>
+  <pre id="historyDisplay">Loading...</pre>
+
+  <script>
+    const history = JSON.parse(localStorage.getItem("invoiceHistory")) || [];
+    let output = "";
+
+    if (history.length === 0) {
+      output = "No invoices found.";
+    } else {
+      history.forEach((inv, i) => {
+        output += `Invoice #${i + 1}\nDate: ${inv.date}\nTotal: Rs.${inv.total}\n-------------------------\n`;
+      });
+    }
+
+    document.getElementById("historyDisplay").textContent = output;
+  </script>
+</body>
+</html>
