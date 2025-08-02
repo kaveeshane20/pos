@@ -109,7 +109,7 @@
 </head>
 <body>
 
-  <h1>Bakery POS System</h1>
+  <h1>New Station viwe Hotel & Bakery POS System</h1>
 
   <form id="posForm">
     <table>
@@ -132,9 +132,9 @@
           <td><input type="number" min="0" value="0" id="cakeQty" /></td>
         </tr>
         <tr>
-          <td>Cookies</td>
-          <td>300</td>
-          <td><input type="number" min="0" value="0" id="cookiesQty" /></td>
+          <td>Fish Bun</td>
+          <td>60</td>
+          <td><input type="number" min="0" value="0" id="fishBunQty" /></td>
         </tr>
       </tbody>
     </table>
@@ -152,13 +152,12 @@
     const prices = {
       bread: 120,
       cake: 1500,
-      cookies: 300
+      fishbun: 60
     };
 
     const { jsPDF } = window.jspdf;
 
     function formatLine(item, qty, price, total) {
-      // Align each column to fixed width for monospace display
       const padRight = (text, len) => text.toString().padEnd(len, ' ');
       const padLeft = (text, len) => text.toString().padStart(len, ' ');
       return padRight(item, 12) + padLeft(qty, 5) + padLeft(price, 9) + padLeft(total, 10);
@@ -169,39 +168,37 @@
 
       const breadQty = parseInt(document.getElementById("breadQty").value) || 0;
       const cakeQty = parseInt(document.getElementById("cakeQty").value) || 0;
-      const cookiesQty = parseInt(document.getElementById("cookiesQty").value) || 0;
+      const fishBunQty = parseInt(document.getElementById("fishBunQty").value) || 0;
       const discount = parseFloat(document.getElementById("discount").value) || 0;
 
-      const billValue = (breadQty * prices.bread) + (cakeQty * prices.cake) + (cookiesQty * prices.cookies);
+      const billValue = (breadQty * prices.bread) + (cakeQty * prices.cake) + (fishBunQty * prices.fishbun);
       const finalBill = Math.max(0, billValue - discount);
 
-      let invoiceText = "====== SDK Bakery Invoice ======\n\n";
+      let invoiceText = "====== New Station viwe Hotel & Bakery Invoice ======\n\n";
       invoiceText += formatLine("Item", "Qty", "Price", "Total") + "\n";
       invoiceText += "---------------------------------------\n";
 
       if (breadQty > 0) invoiceText += formatLine("Bread", breadQty, prices.bread, breadQty * prices.bread) + "\n";
       if (cakeQty > 0) invoiceText += formatLine("Cake", cakeQty, prices.cake, cakeQty * prices.cake) + "\n";
-      if (cookiesQty > 0) invoiceText += formatLine("Cookies", cookiesQty, prices.cookies, cookiesQty * prices.cookies) + "\n";
+      if (fishBunQty > 0) invoiceText += formatLine("Fish Bun", fishBunQty, prices.fishbun, fishBunQty * prices.fishbun) + "\n";
 
       invoiceText += "---------------------------------------\n";
       invoiceText += formatLine("Subtotal:", "", "", billValue.toFixed(2)) + "\n";
       invoiceText += formatLine("Discount:", "", "", discount.toFixed(2)) + "\n";
       invoiceText += "---------------------------------------\n";
       invoiceText += formatLine("Total to Pay:", "", "", finalBill.toFixed(2)) + "\n\n";
-      invoiceText += "Thank you for shopping with us!";
+      invoiceText += "Thank you for join with us!";
 
       document.getElementById("result").textContent = invoiceText;
 
       // Generate PDF
       const doc = new jsPDF();
-
       doc.setFont("courier", "normal");
       doc.setFontSize(18);
-      doc.text("SDK Bakery Invoice", 20, 20);
+      doc.text(" New Station viwe Hotel & Bakery Invoice", 20, 20);
       doc.setFontSize(12);
       const splitText = doc.splitTextToSize(invoiceText, 170);
       doc.text(splitText, 20, 30);
-
       doc.save("sdk_bakery_invoice.pdf");
     });
   </script>
